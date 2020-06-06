@@ -1,6 +1,6 @@
 import org.antlr.v4.runtime.tree.ParseTree;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyVisitors<T> extends Java8ParserBaseVisitor {
     ArrayList<smell> smells;
@@ -9,6 +9,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     private int field = 0;
     private int innerClasses = 0;
     private int innerInterfaces = 0;
+    private int controlFlow = 0;
 
     @Override
     public T visitClassBody(Java8Parser.ClassBodyContext ctx){
@@ -66,6 +67,32 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             innerClasses++;
         } else if (ctx.interfaceDeclaration() != null) {
             innerInterfaces++;
+        }
+        return null;
+    }
+    @Override
+    public T visitStatement(Java8Parser.StatementContext ctx) {
+        controlFlow++;
+        return (T) visitChildren(ctx);
+    }
+    @Override
+    public T visitMethodBody(Java8Parser.MethodBodyContext ctx) {
+        List<Java8Parser.BlockStatementContext> statements = ctx.block().blockStatements().blockStatement();
+        String methodName = ((Java8Parser.MethodDeclarationContext)ctx.getParent()).methodHeader().methodDeclarator().Identifier().getText();
+        if(statements.size()> 10 ){
+            smells.add(new smell(((Java8Parser.MethodDeclarationContext)ctx.parent).start,
+                    "This method is too long!.\n"
+                            + "Method name: " + methodName , "https://refactoring.guru/smells/long-method"));
+
+        }
+        visitChildren(ctx.block());
+        if(controlFlow > 15){
+            controlFlow = 0;
+            smells.add(new smell(((Java8Parser.MethodDeclarationContext)ctx.parent).start,
+                    "This method is too long!.\n"
+                            + "Method name: " + methodName , "https://refactoring.guru/smells/long-method"));
+
+
         }
         return null;
     }
