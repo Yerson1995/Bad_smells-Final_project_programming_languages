@@ -35,6 +35,7 @@ public class Main {
         Java8Parser parser = new Java8Parser(tokens);
         ParseTree tree = parser.compilationUnit(); // Iniciar el analisis sintáctico en la regla inicial: r
         System.out.println(tree.toStringTree(parser)); // imprime el arbol al estilo LISP
-
+        MyVisitors<Object> loader = new MyVisitors<Object>();
+        loader.visit(tree);
     }
 }
