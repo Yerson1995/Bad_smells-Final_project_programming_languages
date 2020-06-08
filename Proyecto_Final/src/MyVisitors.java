@@ -101,7 +101,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().ifThenStatement()!=null){
                     System.out.println("if then");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null){
-                    System.out.println("tatementWithoutTrailing");
+                    System.out.println("statementWithoutTrailing");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().labeledStatement()!=null){
                     System.out.println("labeledStatement");
                 }
@@ -131,40 +131,16 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         return null;
     }
     //-----------------------------------------------------------------------------
-    public void nestedStatement(RuleContext ctx, int line, int column){
-        RuleContext parentStructure = ctx;
-        String parentString;
-        int nestedCounter = 1;
-        int i;
-        while(true){
-            i = 0;
-            while(parentStructure != null && i < 4){
-                parentStructure = parentStructure.parent;
-                i++;
-            }
-            if(parentStructure != null){
-                parentString = parentStructure.getClass().toString();
-                if(parentString.equals("class Java8Parser$If_elsif_statementContext")){
-                    parentStructure = parentStructure.parent.parent;
-                    parentString = parentStructure.getClass().toString();
-                }
-                if(parentString.equals("class RubyParser$If_statementContext")
-                        || parentString.equals("class RubyParser$Unless_statementContext")
-                        || parentString.equals("class RubyParser$While_statementContext")
-                        || parentString.equals("class RubyParser$For_statementContext")){
-                    nestedCounter++;
-                }
-                if(nestedCounter > 4){
-                    String message = "\nMal olor encontrado, estructura profundamente anidada, Linea: " + line + ", Columna: " + column + "\n"
-                            + "Se recomienda reestructurar la logica del codigo para evitar la complejidad de lectura.\n";
-                   //manager.AddCodeSmell(SMELL.DeeplyNestedCode, line, column, message);
-                    break;
-                }
-            }
-            else{
-                break;
-            }
-        }
+    @Override
+    public T visitMethodInvocation(Java8Parser.MethodInvocationContext ctx) {
+        if(ctx.methodName()!=null)
+        System.out.println("metodo invocado"+ctx.methodName().getText());
+        return (T) visitChildren(ctx);
+    }
+    @Override
+    public T visitMethodDeclaration(Java8Parser.MethodDeclarationContext ctx){
+        System.out.println("metodo declarado"+ctx.methodHeader().methodDeclarator().Identifier().toString());
+        return (T) visitChildren(ctx);
     }
 }
 
