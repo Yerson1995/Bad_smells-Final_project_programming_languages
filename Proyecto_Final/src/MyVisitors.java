@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 public class MyVisitors<T> extends Java8ParserBaseVisitor {
     public HashMap<String,function> tablaFunciones = new HashMap<>();
+    public HashMap<String,Integer> tablaClases = new HashMap<>();
     ArrayList<smell> smells=new ArrayList<>();
     int count = 0;
     private int methods = 0;
@@ -187,7 +188,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 System.out.println("metodo invocado ad declarado" + ctx.Identifier().getText());
             }
         }
-        return (T) visitChildren(ctx);
+        return null;
     }
     @Override public T visitMethodInvocation_lfno_primary(Java8Parser.MethodInvocation_lfno_primaryContext ctx)
     {
@@ -207,7 +208,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 System.out.println("metodo invocado declarado" + ctx.Identifier().getText());
             }
         }
-        return (T) visitChildren(ctx);
+        return null;
     }
     @Override
     public T visitMethodDeclaration(Java8Parser.MethodDeclarationContext ctx){
@@ -233,6 +234,69 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                         "This method have a lot of parameters!.\n"
                                 + "Method name: " + methodName , "https://refactoring.guru/smells/long-parameter-list"));
             }
+        }
+        return null;
+    }
+    //-----------------------------------------------------------------------------------
+    @Override public T visitClassDeclaration(Java8Parser.ClassDeclarationContext ctx)
+    {
+        if(ctx.normalClassDeclaration()!=null){
+            tablaClases.put(ctx.normalClassDeclaration().Identifier().toString(),0);
+            if(ctx.normalClassDeclaration().superclass()!=null){
+                String c=ctx.normalClassDeclaration().superclass().classType().Identifier().toString();
+                System.out.println(c+"extendida");
+                if(tablaClases.containsKey(c)){
+                    tablaClases.replace(c,1);
+                }else
+                    tablaClases.put(c,1);
+            }
+            System.out.println("clase declarada "+ctx.normalClassDeclaration().Identifier().toString());
+            for(int c=0;c<ctx.normalClassDeclaration().classBody().classBodyDeclaration().size();c++){
+                if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration()!=null){
+                    if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration()!=null)
+                    {
+                        String met=ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodHeader().methodDeclarator().Identifier().toString();
+                        System.out.println("clase "+ctx.normalClassDeclaration().Identifier().toString()+"metod "+met);
+                        if(met.equals("main")){
+                            tablaClases.replace(ctx.normalClassDeclaration().Identifier().toString(),1);
+                        }
+                    }
+                }
+            }
+        }
+        return (T) visitChildren(ctx);
+    }
+
+    @Override public T visitClassInstanceCreationExpression_lf_primary(Java8Parser.ClassInstanceCreationExpression_lf_primaryContext ctx)
+    {
+        System.out.println(ctx.Identifier().getText()+"instanced");
+        String c=ctx.Identifier().getText();
+        if(tablaClases.containsKey(c)){
+            tablaClases.replace(c,1);
+        }else{
+            tablaClases.put(c,1);
+        }
+        return null;
+    }
+    @Override public T visitClassInstanceCreationExpression_lfno_primary(Java8Parser.ClassInstanceCreationExpression_lfno_primaryContext ctx)
+    {
+        System.out.println(ctx.Identifier().get(0).getText()+"instanced");
+        String c=ctx.Identifier().get(0).getText();
+        if(tablaClases.containsKey(c)){
+            tablaClases.replace(c,1);
+        }else{
+            tablaClases.put(c,1);
+        }
+        return null;
+    }
+    @Override public T visitClassInstanceCreationExpression(Java8Parser.ClassInstanceCreationExpressionContext ctx)
+    {
+        System.out.println(ctx.Identifier().get(0).getText()+"instanced");
+        String c=ctx.Identifier().get(0).getText();
+        if(tablaClases.containsKey(c)){
+            tablaClases.replace(c,1);
+        }else{
+            tablaClases.put(c,1);
         }
         return null;
     }
