@@ -81,8 +81,26 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
 
     @Override
     public T visitStatement(Java8Parser.StatementContext ctx) {
-        controlFlow++;
-        System.out.println("control en este momento"+controlFlow);
+        //System.out.println("ControlFlow: "+controlFlow);
+            if(ctx.whileStatement()!=null){
+                controlFlow=controlFlow+15;
+                //System.out.println("while");
+            }else if(ctx.forStatement()!=null){
+                controlFlow=controlFlow+10;
+                //System.out.println("for");
+            }else if(ctx.ifThenElseStatement()!=null){
+                controlFlow=controlFlow+8;
+                //System.out.println("if else then");
+            }else if(ctx.ifThenStatement()!=null){
+                controlFlow=controlFlow+5;
+                //System.out.println("if then");
+            }else if(ctx.statementWithoutTrailingSubstatement()!=null){
+                controlFlow++;
+                //System.out.println("statementWithoutTrailing");
+            }else if(ctx.labeledStatement()!=null){
+                controlFlow++;
+                //System.out.println("labeledStatement");
+            }
         return (T) visitChildren(ctx);
     }
 
@@ -90,27 +108,33 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     public T visitMethodBody(Java8Parser.MethodBodyContext ctx) {
         controlFlow = 0;
         List<Java8Parser.BlockStatementContext> statements = ctx.block().blockStatements().blockStatement();
-        count++;
-        System.out.println("asdads"+count+"tamaño"+statements.size());
+        count++;//contando cantidad de metodos declarados
+        //System.out.println("Count "+count+"de tamaño"+statements.size());
         for(int c=0;c<statements.size();c++){
             if(ctx.block().blockStatements().blockStatement(c).statement()!=null){
                 if(ctx.block().blockStatements().blockStatement(c).statement().whileStatement()!=null){
-                    System.out.println("while");
+                    controlFlow=controlFlow+15;
+                    //System.out.println("while");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().forStatement()!=null){
-                    System.out.println("for");
+                    controlFlow=controlFlow+10;
+                    //System.out.println("for");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().ifThenElseStatement()!=null){
-                    System.out.println("if else then");
+                    controlFlow=controlFlow+8;
+                    //System.out.println("if else then");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().ifThenStatement()!=null){
-                    System.out.println("if then");
+                    controlFlow=controlFlow+5;
+                    //System.out.println("if then");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null){
-                    System.out.println("statementWithoutTrailing");
+                    //System.out.println("statementWithoutTrailing");
                 }else if(ctx.block().blockStatements().blockStatement(c).statement().labeledStatement()!=null){
-                    System.out.println("labeledStatement");
+                    //System.out.println("labeledStatement");
                 }
             }else if(ctx.block().blockStatements().blockStatement(c).classDeclaration()!=null){
-                System.out.println("class");
+                controlFlow=controlFlow+25;
+                //System.out.println("class");
             }else if(ctx.block().blockStatements().blockStatement(c).localVariableDeclarationStatement()!=null){
-                System.out.println("variable");
+                controlFlow=controlFlow+1;
+                //System.out.println("variable");
             }
         }
         String methodName = ((Java8Parser.MethodDeclarationContext)ctx.getParent()).methodHeader().methodDeclarator().Identifier().getText();
@@ -121,8 +145,8 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
 
         }
         visitChildren(ctx.block());
-        System.out.println("control++"+controlFlow);
-        if(controlFlow > 15){
+        System.out.println("ControlFlow method "+controlFlow);
+        if(controlFlow > 70){
             controlFlow = 0;
             smells.add(new smell(((Java8Parser.MethodDeclarationContext)ctx.parent).start,
                     "This method is too long!.\n"
@@ -210,5 +234,4 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         }
         return null;
     }
-
 }
