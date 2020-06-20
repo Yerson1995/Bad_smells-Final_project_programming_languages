@@ -193,4 +193,22 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         tablaFunciones.put(ctx.methodHeader().methodDeclarator().Identifier().toString(),f);
         return (T) visitChildren(ctx);
     }
+    @Override
+    public T visitMethodDeclarator(Java8Parser.MethodDeclaratorContext ctx) {
+        String methodName = ctx.Identifier().toString();
+        String[] parameters = ctx.formalParameterList().getText().split(",");
+        System.out.println("nombre metodo"+methodName);
+        for (int i=0;i >= parameters.length;i++){
+            System.out.println("parametro:"+parameters[i]);
+        }
+        int c = parameters.length;
+        //evalua si tiene mas de 4 parametros
+        if (c > 4){
+            smells.add(new smell(((Java8Parser.MethodDeclarationContext)ctx.parent.parent).start,
+                    "This method have a lot of parameters!.\n"
+                            + "Method name: " + methodName , "https://refactoring.guru/smells/long-parameter-list"));
+        }
+        return null;
+    }
+
 }
