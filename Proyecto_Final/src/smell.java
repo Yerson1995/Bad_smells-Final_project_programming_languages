@@ -13,13 +13,11 @@ public class smell {
         this.description = description;
         this.url = url;
     }
-
     public smell(Token to, String description) {
         this.row = to.getLine();
         this.col = to.getCharPositionInLine();
         this.description = description;
     }
-
     @Override
     public String toString() {
         return "Bad smell found in Line: " + row + ", Column: " + col

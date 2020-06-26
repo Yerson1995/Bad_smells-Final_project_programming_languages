@@ -37,5 +37,18 @@ public class Main {
         System.out.println(tree.toStringTree(parser)); // imprime el arbol al estilo LISP
         MyVisitors<Object> loader = new MyVisitors<Object>();
         loader.visit(tree);
+        System.out.println("    ");
+        /*for (int i = 0; i <loader.tablaClases.size() ; i++) {
+            //if(loader.tablaClases.)
+        }
+        loader.tablaClases.forEach((k,v) -> {if(v<1){
+            loader.smells.add(new smell(null,
+                    "This method is not used!.\n", "https://refactoring.guru/smells/large-class"));
+        }
+        });*/
+
+        for (int i = 0; i <loader.smells.size(); i++) {
+            System.out.println(loader.smells.get(i).toString());
+        }
     }
 }
