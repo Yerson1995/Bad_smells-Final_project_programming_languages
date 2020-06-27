@@ -40,12 +40,17 @@ public class Main {
         System.out.println("    ");
         /*for (int i = 0; i <loader.tablaClases.size() ; i++) {
             //if(loader.tablaClases.)
+        }*/
+        loader.tablaFunciones.forEach((k,v) -> {if(v.calls<1){
+            loader.smells.add(new smell(v.getT(),
+                    "This Method is not used!.\n", "https://refactoring.guru/smells/speculative-generality"));
         }
-        loader.tablaClases.forEach((k,v) -> {if(v<1){
-            loader.smells.add(new smell(null,
-                    "This method is not used!.\n", "https://refactoring.guru/smells/large-class"));
+        });
+        loader.tablaClases.forEach((k,v) -> {if(v.calls<1){
+            loader.smells.add(new smell(v.getT(),
+                    "This class is not used!.\n", "https://refactoring.guru/smells/lazy-class"));
         }
-        });*/
+        });
 
         for (int i = 0; i <loader.smells.size(); i++) {
             System.out.println(loader.smells.get(i).toString());

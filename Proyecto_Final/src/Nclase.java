@@ -28,4 +28,7 @@ public class Nclase {
     public void setT(Token t) {
         this.t = t;
     }
+    public Token getT() {
+        return t;
+    }
 }

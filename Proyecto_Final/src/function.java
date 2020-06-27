@@ -13,8 +13,13 @@ public class function {
     public int getCalls() {
         return calls;
     }
-
     public void setCalls(int calls) {
         this.calls = calls;
+    }
+    public Token getT() {
+        return t;
+    }
+    public void setT(Token t) {
+        this.t = t;
     }
 }
