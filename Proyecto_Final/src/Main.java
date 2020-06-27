@@ -38,9 +38,6 @@ public class Main {
         MyVisitors<Object> loader = new MyVisitors<Object>();
         loader.visit(tree);
         System.out.println("    ");
-        /*for (int i = 0; i <loader.tablaClases.size() ; i++) {
-            //if(loader.tablaClases.)
-        }*/
         loader.tablaFunciones.forEach((k,v) -> {if(v.calls<1){
             loader.smells.add(new smell(v.getT(),
                     "This Method is not used!.\n", "https://refactoring.guru/smells/speculative-generality"));

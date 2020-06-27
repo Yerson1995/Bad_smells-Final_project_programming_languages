@@ -18,7 +18,6 @@ public class Nclase {
     public int getCalls() {
         return calls;
     }
-
     public void setCalls(int calls) {
         this.calls = calls;
     }

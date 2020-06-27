@@ -163,17 +163,25 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         if(ctx.methodName()!=null) {
             if(tablaFunciones.containsKey( ctx.methodName().getText())){
                 function f = tablaFunciones.get(ctx.methodName().getText());
-                f.setCalls(1);
+                f.AddCalls();
                 tablaFunciones.replace(ctx.methodName().getText(),f);
-                System.out.println("metodo invocado declarado" + ctx.methodName().getText());
+                System.out.println("Metodo invocado declaradoM" + ctx.methodName().getText());
+            }
+            else{
+                function f = new function(ctx.methodName().getText());
+                tablaFunciones.put(ctx.methodName().getText(),f);
             }
         }
         else if(ctx.Identifier()!=null){
             if(tablaFunciones.containsKey( ctx.Identifier().getText())){
                 function f = tablaFunciones.get(ctx.Identifier().getText());
-                f.setCalls(1);
+                f.AddCalls();
                 tablaFunciones.replace(ctx.Identifier().getText(),f);
-                System.out.println("metodo invocado declarado" + ctx.Identifier().getText());
+                System.out.println("Metodo invocado declaradoI" + ctx.Identifier().getText());
+            }
+            else{
+                function f = new function(ctx.Identifier().getText());
+                tablaFunciones.put(ctx.Identifier().getText(),f);
             }
         }
         return (T) visitChildren(ctx);
@@ -183,9 +191,13 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         if(ctx.Identifier()!=null){
             if(tablaFunciones.containsKey( ctx.Identifier().getText())){
                 function f = tablaFunciones.get(ctx.Identifier().getText());
-                f.setCalls(1);
+                f.AddCalls();
                 tablaFunciones.replace(ctx.Identifier().getText(),f);
-                System.out.println("metodo invocado ad declarado" + ctx.Identifier().getText());
+                System.out.println("Metodo invocado ad declarado" + ctx.Identifier().getText());
+            }
+            else{
+                function f = new function(ctx.Identifier().getText());
+                tablaFunciones.put(ctx.Identifier().getText(),f);
             }
         }
         return null;
@@ -195,27 +207,44 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         if(ctx.methodName()!=null) {
             if(tablaFunciones.containsKey( ctx.methodName().getText())){
                 function f = tablaFunciones.get(ctx.methodName().getText());
-                f.setCalls(1);
+                f.AddCalls();
                 tablaFunciones.replace(ctx.methodName().getText(),f);
-                System.out.println("metodo invocado declarado" + ctx.methodName().getText());
+                System.out.println("Metodo invocado declaradoM" + ctx.methodName().getText());
+            }
+            else{
+                function f = new function(ctx.methodName().getText());
+                tablaFunciones.put(ctx.methodName().getText(),f);
             }
         }
         else if(ctx.Identifier()!=null){
             if(tablaFunciones.containsKey( ctx.Identifier().getText())){
                 function f = tablaFunciones.get(ctx.Identifier().getText());
-                f.setCalls(1);
+                f.AddCalls();
                 tablaFunciones.replace(ctx.Identifier().getText(),f);
-                System.out.println("metodo invocado declarado" + ctx.Identifier().getText());
+                System.out.println("Metodo invocado declaradoI" + ctx.Identifier().getText());
+            }
+            else{
+                function f = new function(ctx.Identifier().getText());
+                tablaFunciones.put(ctx.Identifier().getText(),f);
             }
         }
         return null;
     }
     @Override
     public T visitMethodDeclaration(Java8Parser.MethodDeclarationContext ctx){
-        System.out.println("metodo declarado"+ctx.methodHeader().methodDeclarator().Identifier().toString());
+        System.out.println("Metodo declarado"+ctx.methodHeader().methodDeclarator().Identifier().toString());
         function f = new function(ctx.methodHeader().methodDeclarator().Identifier().toString(),0, ctx.methodHeader().methodDeclarator().Identifier().getSymbol());
-        if(!f.name.equals("main"))
-            tablaFunciones.put(ctx.methodHeader().methodDeclarator().Identifier().toString(),f);
+        if(tablaFunciones.containsKey( f.name)){
+            f = tablaFunciones.get(f.name);
+            f.setT(ctx.methodHeader().methodDeclarator().Identifier().getSymbol());
+            tablaFunciones.replace(f.name,f);
+            System.out.println("Metodo Creado" + f.name);
+        }
+        else{
+            if(!f.name.equals("main")){
+                tablaFunciones.put(ctx.methodHeader().methodDeclarator().Identifier().toString(),f);
+            }
+        }
         return (T) visitChildren(ctx);
     }
     @Override
@@ -223,7 +252,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         String methodName = ctx.Identifier().toString();
         if( ctx.formalParameterList()!=null){
             String[] parameters = ctx.formalParameterList().getText().split(",");
-            System.out.println("nombre metodo"+methodName);
+            System.out.println("Nombre metodo"+methodName);
             for (int i=0;i < parameters.length;i++){
                 System.out.println("parametro:"+parameters[i]);
             }
@@ -281,7 +310,6 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         }
         return (T) visitChildren(ctx);
     }
-
     @Override public T visitClassInstanceCreationExpression_lf_primary(Java8Parser.ClassInstanceCreationExpression_lf_primaryContext ctx)
     {
         System.out.println(ctx.Identifier().getText()+"instanced");
