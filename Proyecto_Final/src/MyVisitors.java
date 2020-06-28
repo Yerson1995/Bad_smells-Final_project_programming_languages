@@ -7,6 +7,7 @@ import java.util.List;
 public class MyVisitors<T> extends Java8ParserBaseVisitor {
     public HashMap<String,function> tablaFunciones = new HashMap<>();
     public HashMap<String,Nclase> tablaClases = new HashMap<>();
+    public HashMap<String,VField> tablaVariables = new HashMap<>();
     ArrayList<smell> smells=new ArrayList<>();
     int count = 0;
     private int methods = 0;
@@ -14,6 +15,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     private int field = 0;
     private int innerClasses = 0;
     private int innerInterfaces = 0;
+    private int controlFlow = 0;
 
     @Override
     public T visitClassBody(Java8Parser.ClassBodyContext ctx){
@@ -56,7 +58,6 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
 
         if(ctx.fieldDeclaration() != null){
             field += ctx.fieldDeclaration().variableDeclaratorList().variableDeclarator().size();
-
         }else if (ctx.methodDeclaration() != null) {
             methodsw+=ctx.methodDeclaration().methodBody().block().blockStatements().blockStatement().size();
             String methodName = ctx.methodDeclaration().methodHeader().methodDeclarator().Identifier().getText();
@@ -77,8 +78,6 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         return(T)visitChildren(ctx);
     }
 //---------------------------------------------------------------------
-
-    private int controlFlow = 0;
 
     @Override
     public T visitStatement(Java8Parser.StatementContext ctx) {
@@ -304,6 +303,29 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                             Oclase.AddCalls();
                             tablaClases.replace(cl,Oclase);
                         }
+                        if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodBody().block().blockStatements()!=null){
+                            for (int i = 0; i <ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodBody().block().blockStatements().blockStatement().size() ; i++) {
+                                ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodBody().block().blockStatements().blockStatement(i).statement().forStatement().basicForStatement().statement().forStatement()statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().
+                            }
+                        }
+                    }
+                    else if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration()!=null){
+                        for (int i = 0; i <ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration().variableDeclaratorList().variableDeclarator().size(); i++) {
+                            if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration().variableDeclaratorList().variableDeclarator(i).variableDeclaratorId().Identifier()!=null){
+                                String name=ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration().variableDeclaratorList().variableDeclarator(i).variableDeclaratorId().Identifier().getText();
+                                if(!tablaVariables.containsKey(name)){
+                                    VField vf=new VField(name,0,ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration().variableDeclaratorList().variableDeclarator(i).variableDeclaratorId().Identifier().getSymbol(),cl);
+                                    tablaVariables.put(name,vf);
+                                    System.out.println("Variable creada");
+                                }
+                                else{
+                                    VField vf=tablaVariables.get(name);
+                                    vf.setT(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration().variableDeclaratorList().variableDeclarator(i).variableDeclaratorId().Identifier().getSymbol());
+                                    tablaVariables.replace(name,vf);
+                                    System.out.println("Variable indicada");
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -355,4 +377,22 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         }
         return null;
     }
+    //-----------------------------------------------------------------------------------
+
+    /*@Override
+    public Object visitVariableDeclaratorId(Java8Parser.VariableDeclaratorIdContext ctx) {
+        System.out.println("Variable declarada "+ctx.Identifier().getText());
+
+        VField f = new VField(ctx.Identifier().getText(),0, ctx.Identifier().getSymbol());
+        if(tablaVariables.containsKey( f.name)){
+            f = tablaVariables.get(f.name);
+            f.setT(ctx.Identifier().getSymbol());
+            tablaVariables.replace(f.name,f);
+            System.out.println("Variable declarada " + f.name);
+        }
+        else{
+            tablaVariables.put(ctx.Identifier().getText(),f);
+        }
+        return null;
+    }*/
 }
