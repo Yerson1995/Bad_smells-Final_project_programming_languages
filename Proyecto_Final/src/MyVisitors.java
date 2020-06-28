@@ -413,6 +413,26 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         }
         return (T) visitChildren(ctx);
     }
+
+    @Override
+    public Object visitWhileStatementNoShortIf(Java8Parser.WhileStatementNoShortIfContext ctx) {
+        System.out.println("im in while");
+        if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
+            System.out.println("i have a simple return");
+        }
+        if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+            int t=ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+            for(int c=0;c<t;c++){
+                if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
+                    if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                        System.out.println("i have a return");
+                    }
+            }
+
+        }
+        return (T) visitChildren(ctx);
+    }
+
     @Override
     public Object visitForStatement(Java8Parser.ForStatementContext ctx) {
         if(ctx.basicForStatement()!=null){
@@ -443,7 +463,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 }
             }
         }
-        return null;
+        return (T) visitChildren(ctx);
     }
 
     @Override
@@ -476,6 +496,6 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 }
             }
         }
-        return null;
+        return (T) visitChildren(ctx);
     }
 }
