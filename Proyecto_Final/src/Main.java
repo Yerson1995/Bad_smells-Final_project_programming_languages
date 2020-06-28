@@ -68,40 +68,48 @@ public class Main {
         loader.visit(tree);
         ArrayList<String> tot= new ArrayList<String>();
         ArrayList<String> fun = new ArrayList<String>();
+        ArrayList<String> cla = new ArrayList<String>();
+        ArrayList<String> vf = new ArrayList<String>();
+        System.out.println("    ");
+        loader.tablaVariables.forEach((k,v) -> {
+            vf.add(k);
+            tot.add(k);
+        });
         loader.tablaFunciones.forEach((k,v) -> {
             fun.add(k);
             tot.add(k);
+            if(v.calls<1){
+                loader.smells.add(new smell(v.getT(),
+                    "This Method is not used!.\n", "https://refactoring.guru/smells/speculative-generality"));
+            }
         });
-        ArrayList<String> cla = new ArrayList<String>();
         loader.tablaClases.forEach((k,v) -> {
             cla.add(k);
             tot.add(k);
-        });
-        System.out.println("    ");
-        loader.tablaFunciones.forEach((k,v) -> {if(v.calls<1){
-            loader.smells.add(new smell(v.getT(),
-                    "This Method is not used!.\n", "https://refactoring.guru/smells/speculative-generality"));
-        }
-        });
-        loader.tablaClases.forEach((k,v) -> {if(v.calls<1){
-            loader.smells.add(new smell(v.getT(),
+            if(v.calls<1){
+                loader.smells.add(new smell(v.getT(),
                     "This class is not used!.\n", "https://refactoring.guru/smells/lazy-class"));
-        }
+            }
         });
 
         for (int i = 0; i <loader.smells.size(); i++) {
             System.out.println(loader.smells.get(i).toString());
         }
-        System.out.println("datos");
+        System.out.println("Datos");
+        for(int c =0;c<vf.size();c++){
+            System.out.println("Variable "+vf.get(c));
+        }
         for(int c =0;c<fun.size();c++){
-            System.out.println("funcion "+fun.get(c));
+            System.out.println("Funcion "+fun.get(c));
         }
         for(int c =0;c<cla.size();c++){
-            System.out.println("clase "+cla.get(c));
+            System.out.println("Clase "+cla.get(c));
         }
         for(int c=0;c<tot.size();c++){
+            int dl=0;
             for(int d=c+1;d<tot.size();d++){
-                System.out.println("pair "+tot.get(c)+" "+tot.get(d)+" distance "+computeLevenshteinDistance(tot.get(c),tot.get(d)));
+                dl=computeLevenshteinDistance(tot.get(c),tot.get(d));
+                System.out.println("pair ("+tot.get(c)+" : "+tot.get(d)+") distance ="+dl);
             }
         }
     }
