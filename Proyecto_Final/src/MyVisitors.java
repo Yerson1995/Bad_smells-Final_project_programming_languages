@@ -303,7 +303,11 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                             Oclase.AddCalls();
                             tablaClases.replace(cl,Oclase);
                         }
-
+                        /*if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodBody().block().blockStatements()!=null){
+                            for (int i = 0; i <ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodBody().block().blockStatements().blockStatement().size() ; i++) {
+                                ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodBody().block().blockStatements().blockStatement(i).statement().forStatement().basicForStatement().statement().forStatement()statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().statement().forStatement().basicForStatement().
+                            }
+                        }
                     }
                     else if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration()!=null){
                         for (int i = 0; i <ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().fieldDeclaration().variableDeclaratorList().variableDeclarator().size(); i++) {
@@ -321,7 +325,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                                     System.out.println("Variable indicada");
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -374,28 +378,11 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         return null;
     }
     //-----------------------------------------------------------------------------------
-    @Override
-    public T visitWhileStatement(Java8Parser.WhileStatementContext ctx) {
-        System.out.println("im in while");
-        if(ctx.statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-            System.out.println("i have a simple return");
-        }
-        if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
-            int t=ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-            for(int c=0;c<t;c++){
-                if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
-                if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                    System.out.println("i have a return");
-                }
-            }
-
-        }
-        return (T) visitChildren(ctx);
-    }
 
     /*@Override
     public Object visitVariableDeclaratorId(Java8Parser.VariableDeclaratorIdContext ctx) {
         System.out.println("Variable declarada "+ctx.Identifier().getText());
+
         VField f = new VField(ctx.Identifier().getText(),0, ctx.Identifier().getSymbol());
         if(tablaVariables.containsKey( f.name)){
             f = tablaVariables.get(f.name);
@@ -408,4 +395,87 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         }
         return null;
     }*/
+    @Override
+    public T visitWhileStatement(Java8Parser.WhileStatementContext ctx) {
+        System.out.println("im in while");
+        if(ctx.statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+            System.out.println("i have a simple return");
+        }
+        if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+            int t=ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+            for(int c=0;c<t;c++){
+                if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
+                    if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                        System.out.println("i have a return");
+                    }
+            }
+
+        }
+        return (T) visitChildren(ctx);
+    }
+    @Override
+    public Object visitForStatement(Java8Parser.ForStatementContext ctx) {
+        if(ctx.basicForStatement()!=null){
+            if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                System.out.println("i have a simple return");
+            }
+            else if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+                int t=ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                for(int c=0;c<t;c++){
+                    if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
+                        if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                            System.out.println("i have a return");
+                        }
+                }
+            }
+        }
+        else if(ctx.enhancedForStatement()!=null){
+            if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                System.out.println("i have a simple return");
+            }
+            else if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+                int t=ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                for(int c=0;c<t;c++){
+                    if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
+                        if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                            System.out.println("i have a return");
+                        }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Object visitForStatementNoShortIf(Java8Parser.ForStatementNoShortIfContext ctx) {
+        if(ctx.basicForStatementNoShortIf()!=null){
+            if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                System.out.println("i have a simple return");
+            }
+            else if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+                int t=ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                for(int c=0;c<t;c++){
+                    if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
+                        if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                            System.out.println("i have a return");
+                        }
+                }
+            }
+        }
+        else if(ctx.enhancedForStatementNoShortIf()!=null){
+            if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                System.out.println("i have a simple return");
+            }
+            else if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+                int t=ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                for(int c=0;c<t;c++){
+                    if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
+                        if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                            System.out.println("i have a return");
+                        }
+                }
+            }
+        }
+        return null;
+    }
 }
