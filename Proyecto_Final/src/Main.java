@@ -80,7 +80,7 @@ public class Main {
             tot.add(k);
             if(v.calls<1){
                 loader.smells.add(new smell(v.getT(),
-                    "This Method is not used!.\n", "https://refactoring.guru/smells/speculative-generality"));
+                    "Este metodo no es usado:!: "+k+".\n", "https://refactoring.guru/smells/speculative-generality"));
             }
         });
         loader.tablaClases.forEach((k,v) -> {
@@ -88,7 +88,7 @@ public class Main {
             tot.add(k);
             if(v.calls<1){
                 loader.smells.add(new smell(v.getT(),
-                    "This class is not used!.\n", "https://refactoring.guru/smells/lazy-class"));
+                        "Esta clase no es usada:!: "+k+".\n", "https://refactoring.guru/smells/lazy-class"));
             }
         });
 
