@@ -32,7 +32,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.data.xy.XYDataset;
@@ -46,20 +49,17 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 public class MainView extends javax.swing.JFrame {
     FileFilter filter = new FileNameExtensionFilter("Archivos Texto o Java ", new String[] {"java", "txt"});
-//    private JScrollPane jsp;
     
     public static Java8Lexer lexer;
     String archivo = null;
     String ruta = null;
     String code = null;
-    
+    public static String noused = null;
+    public static int numnoclase = 0;
     
 
     public static boolean exportToCSV(JTable tableToExport, String pathToExportTo) {
-        
-
         try {
-
             TableModel model = tableToExport.getModel();
             FileWriter csv = new FileWriter(new File(pathToExportTo));
 
@@ -87,9 +87,14 @@ public class MainView extends javax.swing.JFrame {
     }
     
     public static void oler(String rutaarchivo){
+        String informe = null;
+        
+        noused = "__CLASES NO USADAS__\n";
+        
         int numvar = 0;
         int numfun = 0;
         int numclase = 0;
+        
         try {
                 lexer = new Java8Lexer(CharStreams.fromFileName(rutaarchivo));
             } catch (IOException ex) {
@@ -105,7 +110,7 @@ public class MainView extends javax.swing.JFrame {
         loader.visit(tree);
         ArrayList<String> tot= new ArrayList<String>();
         ArrayList<String> fun = new ArrayList<String>();
-        ArrayList<String> cla = new ArrayList<String>();
+        ArrayList<function> objfun = new ArrayList<function>();
         ArrayList<String> vf = new ArrayList<String>();
         System.out.println("    ");
         loader.tablaVariables.forEach((k,v) -> {
@@ -115,70 +120,96 @@ public class MainView extends javax.swing.JFrame {
         loader.tablaFunciones.forEach((k,v) -> {
             fun.add(k);
             tot.add(k);
-            if(v.calls<1){
-                loader.smells.add(new smell(v.getT(),
-                    "El metodo no es usado!.\n", "https://refactoring.guru/smells/speculative-generality"));
-            }
+            objfun.add(v);
+        });
+        ArrayList<String> cla = new ArrayList<String>();
+        ArrayList<Nclase> objcla = new ArrayList<Nclase>();
+        loader.tablaClases.forEach((k,v) -> {
+            cla.add(k);
+            tot.add(k);
+            objcla.add(v);
         });
         loader.tablaClases.forEach((k,v) -> {
             cla.add(k);
             tot.add(k);
             if(v.calls<1){
+                noused += "-"+v.name+"\n";
+                numnoclase++;
                 loader.smells.add(new smell(v.getT(),
                     "La clase no es usada!.\n", "https://refactoring.guru/smells/lazy-class"));
             }
         });
+        
+        labelnoused.setText(Integer.toString(numnoclase));
+        numnoclase=0;
 
-        //estos son los olores
-//        for (int i = 0; i <loader.smells.size(); i++) {
-//            System.out.println("Olor No. "+(i+1));
-//            System.out.println(loader.smells.get(i).toString());
-//        }
         for (int i = 0; i < loader.smells.size(); i++) {
             AnadirOlor(loader.smells.get(i).row,loader.smells.get(i).col,loader.smells.get(i).description);
-            //AnadirOlor(loader.smells.get(i).description);
         }
+        labelolores.setText(Integer.toString(loader.smells.size()));
         
-        //XYSeriesCollection dataset = new XYSeriesCollection();  
         DefaultPieDataset dataset = new DefaultPieDataset();
-//        PieDataset series1 = new DefaultPieDataset("Variables"); 
-//        PieDataset series2 = new DefaultPieDataset("Funciones");  
-//        PieDataset series3 = new DefaultPieDataset("Clases");  
 
-        System.out.println("Datos");
+        //DATOS
+        informe = "♦ VARIABLES \n";
         for (int c = 0; c < vf.size(); c++) {
-            System.out.println("Variable " + vf.get(c));
+            informe += "-"+vf.get(c)+"\n";
             numvar=c;
         }
+        informe += "_______________________________\n";
+        labelvar.setText(Integer.toString(numvar));
         dataset.setValue( "Variable: "+numvar , new Double( numvar ) );
-        //series1.add(1, numvar);  
+        
+        informe += "♠ FUNCIONES \n";
         for (int d = 0; d < fun.size(); d++) {
-            System.out.println("Funcion " + fun.get(d));
+            informe += "-"+fun.get(d)+"\n";
             numfun=d;
         }
+        informe += "_______________________________\n";
+        labelfunc.setText(Integer.toString(numfun));
         dataset.setValue( "Funcion: "+numfun , new Double( numfun) );
-        //series2.add(1, numfun); 
+        
+        informe += "♣ CLASES \n";
         for(int e =0;e<cla.size();e++){
-            System.out.println("Clase "+cla.get(e));
+            informe += "-"+cla.get(e)+"\n";
             numclase=e;
         }
+        informe += "_______________________________\n";
+        labelclases.setText(Integer.toString(numclase));
         dataset.setValue( "Clase: "+numclase , new Double( numclase) );
-        //series3.add(1, numclase);
-        
-//        dataset.addSeries(series1);
-//        dataset.addSeries(series2);
-//        dataset.addSeries(series3);
         
         graficainit(dataset,panelgrafica);
+        
+        
+        DefaultCategoryDataset dataset3 = new DefaultCategoryDataset();
         
         for(int c=0;c<tot.size();c++){
             int dl=0;
             for(int d=c+1;d<tot.size();d++){
                 dl=computeLevenshteinDistance(tot.get(c),tot.get(d));
-                System.out.println("pair ("+tot.get(c)+" : "+tot.get(d)+") distance ="+dl);
+                if(dl <= 5){
+                    dataset3.addValue(dl,tot.get(d),tot.get(c));
+                }
             }
         }
+        
+        DefaultCategoryDataset dataset1 =  new DefaultCategoryDataset( ); 
+        for(int i=0;i<objcla.size();i++){
+            dataset1.addValue(objcla.get(i).calls, objcla.get(i).name, "# Usos");
+        }
+        grafica1_2(dataset1, panelgrafica1, "Llamadas de clases", "Clases");
+        
+        DefaultCategoryDataset dataset2 =  new DefaultCategoryDataset( ); 
+        for(int i=0;i<objfun.size();i++){
+            dataset2.addValue(objfun.get(i).calls, objfun.get(i).name, "# Usos");
+        }
+        grafica1_2(dataset2, panelgrafica2, "Llamadas de funciones", "Funciones");
+        
+        grafica3(dataset3, panelgrafica3);
+        informe+=noused;
+        informebox.setText(informe);
     }
+    
     
      private static int minimum(int a, int b, int c) {
         return Math.min(a, Math.min(b, c));
@@ -209,8 +240,7 @@ public class MainView extends javax.swing.JFrame {
 
     }
     
-    
-    
+    //GRAFICAS
     public static void graficainit(DefaultPieDataset set, JPanel panel) {
         //JFreeChart grafica1 = ChartFactory.createScatterPlot( "Numero de Elementos Identificados", "X-Axis", "Y-Axis", set);
         JFreeChart grafica1 = ChartFactory.createPieChart3D("Numero de Elementos Identificados", set);
@@ -220,6 +250,23 @@ public class MainView extends javax.swing.JFrame {
         panel.validate();
     }
     
+    public static void grafica1_2(CategoryDataset set, JPanel panel,String titulo,String base) {
+        JFreeChart barChart = ChartFactory.createBarChart(titulo, base, "Veces usado", set,PlotOrientation.VERTICAL, true, true, false);
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension( 560 , 367 ) );       
+        panel.removeAll();
+        panel.add(chartPanel, BorderLayout.CENTER);
+        panel.validate();
+    }
+    
+    public static void grafica3(CategoryDataset set, JPanel panel) {
+        JFreeChart grafica3 = ChartFactory.createBarChart("Grafica de Similitudes","Elementos","Cant de diferencias",set,PlotOrientation.VERTICAL,true,true,false);
+        //JFreeChart grafica1 = ChartFactory.createPieChart3D("Numero de Elementos Identificados", set);
+        ChartPanel chartPanel = new ChartPanel(grafica3);
+        panel.removeAll();
+        panel.add(chartPanel, BorderLayout.CENTER);
+        panel.validate();
+    }
 
     
     public static void AnadirOlor(int fil,int col, String dataRow)
@@ -270,10 +317,25 @@ public class MainView extends javax.swing.JFrame {
         ButtonNose = new javax.swing.JButton();
         exportar = new javax.swing.JButton();
         panelInfo = new javax.swing.JPanel();
+        panelgrafica1 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        panelgraf2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        informebox = new javax.swing.JTextArea();
         Resume = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        labelolores = new javax.swing.JLabel();
+        labelclases = new javax.swing.JLabel();
+        labelvar = new javax.swing.JLabel();
+        labelfunc = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        labelnoused = new javax.swing.JLabel();
+        panelgrafica2 = new javax.swing.JPanel();
+        panelSimil = new javax.swing.JPanel();
+        panelgrafica3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -437,12 +499,19 @@ public class MainView extends javax.swing.JFrame {
 
         panelInfo.setOpaque(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Titulo Generico"));
+        panelgrafica1.setOpaque(false);
+        panelgrafica1.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos"));
         jPanel1.setOpaque(false);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        panelgraf2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelgraf2.setLayout(new java.awt.BorderLayout());
+
+        informebox.setEditable(false);
+        informebox.setColumns(20);
+        informebox.setRows(5);
+        jScrollPane3.setViewportView(informebox);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -451,28 +520,80 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(663, 663, 663)
+                    .addComponent(panelgraf2, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(184, 184, 184))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addComponent(panelgraf2, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 275, Short.MAX_VALUE)))
         );
 
-        Resume.setText("jLabel2");
+        Resume.setText("Informacion General :");
+
+        jLabel2.setText("Numero de Olores detectados: ");
+
+        jLabel3.setText("Cantidad de Clases detectadas:");
+
+        jLabel4.setText("Cantidad de Funciones detectadas:");
+
+        jLabel5.setText("Cantidad de Variables detectadas:");
+
+        labelolores.setText("0");
+
+        labelclases.setText("0");
+
+        labelvar.setText("0");
+
+        labelfunc.setText("0");
+
+        jLabel6.setForeground(new java.awt.Color(255, 0, 0));
+        jLabel6.setText("Cantidad de Clases NO Usadas:");
+
+        labelnoused.setForeground(new java.awt.Color(255, 0, 0));
+        labelnoused.setText("0");
 
         javax.swing.GroupLayout panelInfoLayout = new javax.swing.GroupLayout(panelInfo);
         panelInfo.setLayout(panelInfoLayout);
         panelInfoLayout.setHorizontalGroup(
             panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelInfoLayout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addComponent(Resume)
-                .addContainerGap(708, Short.MAX_VALUE))
+                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelInfoLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelInfoLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Resume)
+                            .addGroup(panelInfoLayout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel6))
+                                .addGap(49, 49, 49)
+                                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(labelnoused)
+                                    .addComponent(labelfunc)
+                                    .addComponent(labelvar)
+                                    .addComponent(labelolores)
+                                    .addComponent(labelclases))))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelgrafica1, javax.swing.GroupLayout.PREFERRED_SIZE, 767, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         panelInfoLayout.setVerticalGroup(
             panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -480,14 +601,66 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelInfoLayout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Resume)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(labelolores))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(labelclases))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelvar)
+                            .addComponent(jLabel5)))
                     .addGroup(panelInfoLayout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(Resume)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                        .addGap(110, 110, 110)
+                        .addComponent(panelgrafica1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelfunc)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(panelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(labelnoused))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Información", panelInfo);
+
+        panelgrafica2.setOpaque(false);
+        panelgrafica2.setLayout(new java.awt.BorderLayout());
+        jTabbedPane1.addTab("Llamados por Funcion", panelgrafica2);
+
+        panelgrafica3.setOpaque(false);
+        panelgrafica3.setLayout(new java.awt.BorderLayout());
+
+        javax.swing.GroupLayout panelSimilLayout = new javax.swing.GroupLayout(panelSimil);
+        panelSimil.setLayout(panelSimilLayout);
+        panelSimilLayout.setHorizontalGroup(
+            panelSimilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1148, Short.MAX_VALUE)
+            .addGroup(panelSimilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelSimilLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(panelgrafica3, javax.swing.GroupLayout.PREFERRED_SIZE, 1129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(13, Short.MAX_VALUE)))
+        );
+        panelSimilLayout.setVerticalGroup(
+            panelSimilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 604, Short.MAX_VALUE)
+            .addGroup(panelSimilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSimilLayout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelgrafica3, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(17, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane1.addTab("Similitudes", panelSimil);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 1150, 630));
         jTabbedPane1.getAccessibleContext().setAccessibleName("Vista Principal");
@@ -561,7 +734,6 @@ public class MainView extends javax.swing.JFrame {
         //if the user confirms file selection display a message  
         if (returnVal == this.jFileChooser2.APPROVE_OPTION) {
             codigoBox.repaint();
-            System.out.println("getSelectedFile() : " + jFileChooser2.getSelectedFile());
             archivo = jFileChooser2.getSelectedFile().getName();
             ruta= jFileChooser2.getSelectedFile().getAbsolutePath()+".csv";
             JOptionPane.showMessageDialog(null, "Archivo seleccionado. "+archivo);
@@ -642,8 +814,14 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JLabel Resume;
     private javax.swing.JTextArea codigoBox;
     private javax.swing.JButton exportar;
+    public static javax.swing.JTextArea informebox;
     private javax.swing.JFileChooser jFileChooser2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
@@ -658,10 +836,19 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
+    public static javax.swing.JLabel labelclases;
+    public static javax.swing.JLabel labelfunc;
+    public static javax.swing.JLabel labelnoused;
+    public static javax.swing.JLabel labelolores;
+    public static javax.swing.JLabel labelvar;
     public static javax.swing.JTable oloresTab;
     private javax.swing.JPanel panelInfo;
     private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JPanel panelSimil;
+    public static javax.swing.JPanel panelgraf2;
     public static javax.swing.JPanel panelgrafica;
+    public static javax.swing.JPanel panelgrafica1;
+    public static javax.swing.JPanel panelgrafica2;
+    public static javax.swing.JPanel panelgrafica3;
     // End of variables declaration//GEN-END:variables
 }

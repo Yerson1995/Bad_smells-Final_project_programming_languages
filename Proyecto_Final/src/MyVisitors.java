@@ -42,7 +42,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             tot=tot+innerClasses * 0.30;
         }
         tot=tot/5;
-        System.out.println("total"+tot);
+        //System.out.println("total"+tot);
         if(tot > 1){
             smells.add(new smell(((Java8Parser.NormalClassDeclarationContext)ctx.parent).start,
                     "This class is to enormous!.\n", "https://refactoring.guru/smells/large-class"));
@@ -68,7 +68,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             }
             else{
                 methods++;
-                System.out.println("estoy sumando");
+                //System.out.println("estoy sumando");
             }
         } else if (ctx.classDeclaration() != null) {
             innerClasses++;
@@ -125,7 +125,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
 
         }
         visitChildren(ctx.block());
-        System.out.println("ControlFlow method "+controlFlow);
+        //System.out.println("ControlFlow method "+controlFlow);
         if(controlFlow > 70){
             controlFlow = 0;
             smells.add(new smell(((Java8Parser.MethodDeclarationContext)ctx.parent).start,
@@ -144,7 +144,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 function f = tablaFunciones.get(ctx.methodName().getText());
                 f.AddCalls();
                 tablaFunciones.replace(ctx.methodName().getText(),f);
-                System.out.println("Metodo invocado declaradoM" + ctx.methodName().getText());
+                //System.out.println("Metodo invocado declaradoM" + ctx.methodName().getText());
             }
             else{
                 function f = new function(ctx.methodName().getText());
@@ -156,7 +156,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 function f = tablaFunciones.get(ctx.Identifier().getText());
                 f.AddCalls();
                 tablaFunciones.replace(ctx.Identifier().getText(),f);
-                System.out.println("Metodo invocado declaradoI" + ctx.Identifier().getText());
+                //System.out.println("Metodo invocado declaradoI" + ctx.Identifier().getText());
             }
             else{
                 function f = new function(ctx.Identifier().getText());
@@ -172,7 +172,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 function f = tablaFunciones.get(ctx.Identifier().getText());
                 f.AddCalls();
                 tablaFunciones.replace(ctx.Identifier().getText(),f);
-                System.out.println("Metodo invocado ad declarado" + ctx.Identifier().getText());
+                //System.out.println("Metodo invocado ad declarado" + ctx.Identifier().getText());
             }
             else{
                 function f = new function(ctx.Identifier().getText());
@@ -188,7 +188,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 function f = tablaFunciones.get(ctx.methodName().getText());
                 f.AddCalls();
                 tablaFunciones.replace(ctx.methodName().getText(),f);
-                System.out.println("Metodo invocado declaradoM" + ctx.methodName().getText());
+                //System.out.println("Metodo invocado declaradoM" + ctx.methodName().getText());
             }
             else{
                 function f = new function(ctx.methodName().getText());
@@ -200,7 +200,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 function f = tablaFunciones.get(ctx.Identifier().getText());
                 f.AddCalls();
                 tablaFunciones.replace(ctx.Identifier().getText(),f);
-                System.out.println("Metodo invocado declaradoI" + ctx.Identifier().getText());
+                //System.out.println("Metodo invocado declaradoI" + ctx.Identifier().getText());
             }
             else{
                 function f = new function(ctx.Identifier().getText());
@@ -211,13 +211,13 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     }
     @Override
     public T visitMethodDeclaration(Java8Parser.MethodDeclarationContext ctx){
-        System.out.println("Metodo declarado"+ctx.methodHeader().methodDeclarator().Identifier().toString());
+        //System.out.println("Metodo declarado"+ctx.methodHeader().methodDeclarator().Identifier().toString());
         function f = new function(ctx.methodHeader().methodDeclarator().Identifier().toString(),0, ctx.methodHeader().methodDeclarator().Identifier().getSymbol());
         if(tablaFunciones.containsKey( f.name)){
             f = tablaFunciones.get(f.name);
             f.setT(ctx.methodHeader().methodDeclarator().Identifier().getSymbol());
             tablaFunciones.replace(f.name,f);
-            System.out.println("Metodo Creado" + f.name);
+            //System.out.println("Metodo Creado" + f.name);
         }
         else{
             if(!f.name.equals("main")){
@@ -231,9 +231,9 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         String methodName = ctx.Identifier().toString();
         if( ctx.formalParameterList()!=null){
             String[] parameters = ctx.formalParameterList().getText().split(",");
-            System.out.println("Nombre metodo"+methodName);
+            //System.out.println("Nombre metodo"+methodName);
             for (int i=0;i < parameters.length;i++){
-                System.out.println("parametro:"+parameters[i]);
+                //System.out.println("parametro:"+parameters[i]);
             }
             int c = parameters.length;
             //evalua si tiene mas de 4 parametros
@@ -261,7 +261,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             }
             if(ctx.normalClassDeclaration().superclass()!=null){
                 cl=ctx.normalClassDeclaration().superclass().classType().Identifier().toString();
-                System.out.println(cl+" Extendida");
+                //System.out.println(cl+" Extendida");
                 if(tablaClases.containsKey(cl)){
                     Oclase=tablaClases.get(cl);
                     Oclase.AddCalls();
@@ -271,13 +271,13 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                     tablaClases.put(cl,Oclase);
                 }
             }
-            System.out.println("Clase declarada "+ctx.normalClassDeclaration().Identifier().toString());
+            //System.out.println("Clase declarada "+ctx.normalClassDeclaration().Identifier().toString());
             for(int c=0;c<ctx.normalClassDeclaration().classBody().classBodyDeclaration().size();c++){
                 if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration()!=null){
                     if(ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration()!=null)
                     {
                         String met=ctx.normalClassDeclaration().classBody().classBodyDeclaration(c).classMemberDeclaration().methodDeclaration().methodHeader().methodDeclarator().Identifier().toString();
-                        System.out.println("clase "+ctx.normalClassDeclaration().Identifier().toString()+"metod "+met);
+                        //System.out.println("clase "+ctx.normalClassDeclaration().Identifier().toString()+"metod "+met);
                         if(met.equals("main")){
                             Oclase=tablaClases.get(ctx.normalClassDeclaration().Identifier().toString());
                             Oclase.AddCalls();
@@ -314,7 +314,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     }
     @Override public T visitClassInstanceCreationExpression_lf_primary(Java8Parser.ClassInstanceCreationExpression_lf_primaryContext ctx)
     {
-        System.out.println(ctx.Identifier().getText()+"instanced");
+        //System.out.println(ctx.Identifier().getText()+"instanced");
         String c=ctx.Identifier().getText();
         Nclase Oclase=new Nclase(c,0,ctx.start);
         if(tablaClases.containsKey(c)){
@@ -329,7 +329,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     }
     @Override public T visitClassInstanceCreationExpression_lfno_primary(Java8Parser.ClassInstanceCreationExpression_lfno_primaryContext ctx)
     {
-        System.out.println(ctx.Identifier().get(0).getText()+"instanced");
+        //System.out.println(ctx.Identifier().get(0).getText()+"instanced");
         String c=ctx.Identifier().get(0).getText();
         Nclase Oclase=new Nclase(c,0,ctx.start);
         if(tablaClases.containsKey(c)){
@@ -344,7 +344,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     }
     @Override public T visitClassInstanceCreationExpression(Java8Parser.ClassInstanceCreationExpressionContext ctx)
     {
-        System.out.println(ctx.Identifier().get(0).getText()+"instanced");
+        //System.out.println(ctx.Identifier().get(0).getText()+"instanced");
         String c=ctx.Identifier().get(0).getText();
         Nclase Oclase=new Nclase(c,0,ctx.start);
         if(tablaClases.containsKey(c)){
@@ -360,13 +360,13 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     //-----------------------------------------------------------------------------------
     @Override
     public Object visitVariableDeclaratorId(Java8Parser.VariableDeclaratorIdContext ctx) {
-        System.out.println("Variable declarada "+ctx.Identifier().getText());
+        //System.out.println("Variable declarada "+ctx.Identifier().getText());
         VField f = new VField(ctx.Identifier().getText(),0, ctx.Identifier().getSymbol(),null);
         if(tablaVariables.containsKey( f.name)){
             f = tablaVariables.get(f.name);
             f.setT(ctx.Identifier().getSymbol());
             tablaVariables.replace(f.name,f);
-            System.out.println("Variable declarada " + f.name);
+            //System.out.println("Variable declarada " + f.name);
         }
         else{
             tablaVariables.put(ctx.Identifier().getText(),f);
@@ -375,11 +375,11 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     }
     @Override
     public T visitWhileStatement(Java8Parser.WhileStatementContext ctx) {
-        System.out.println("im in while");
+        //System.out.println("im in while");
         if(ctx.statement()!=null) {
             if (ctx.statement().statementWithoutTrailingSubstatement() != null) {
                 if (ctx.statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                    System.out.println("i have a simple return");
+                    //System.out.println("i have a simple return");
                     smells.add(new smell(ctx.statement().statementWithoutTrailingSubstatement().returnStatement().start,
                             "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
                     return null;
@@ -392,7 +392,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                                 if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
                                     if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
                                         if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                                            System.out.println("i have a return");
+                                            //System.out.println("i have a return");
                                             smells.add(new smell(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                                     "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
                                         }
@@ -408,11 +408,11 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     }
     @Override
     public Object visitWhileStatementNoShortIf(Java8Parser.WhileStatementNoShortIfContext ctx) {
-        System.out.println("im in while");
+        //System.out.println("im in while");
         if(ctx.statementNoShortIf()!=null) {
             if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement() != null) {
                 if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                    System.out.println("i have a simple return");
+                    //System.out.println("i have a simple return");
                     smells.add(new smell(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
                             "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
                 }
@@ -424,7 +424,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                                 if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
                                     if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
                                         if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                                            System.out.println("i have a return");
+                                            //System.out.println("i have a return");
                                             smells.add(new smell(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                                     "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
                                         }
@@ -446,7 +446,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             if(ctx.basicForStatement().statement()!=null) {
                 if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement()!=null) {
                     if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                        System.out.println("i have a simple return");
+                        //System.out.println("i have a simple return");
                         smells.add(new smell(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                 "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                     }else if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block()!= null) {
@@ -456,7 +456,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                                 if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
                                     if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
                                         if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                                            System.out.println("i have a return");
+                                            //System.out.println("i have a return");
                                             smells.add(new smell(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                                     "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                                         }
@@ -472,7 +472,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             if(ctx.enhancedForStatement().statement()!=null){
                 if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement()!=null){
                     if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                        System.out.println("i have a simple return");
+                        //System.out.println("i have a simple return");
                         smells.add(new smell(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                 "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                     }
@@ -482,7 +482,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                             if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null){
                                 if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null) {
                                     if (ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                                        System.out.println("I have a return");
+                                        //System.out.println("I have a return");
                                         smells.add(new smell(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                                 "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                                     }
@@ -501,7 +501,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             if(ctx.basicForStatementNoShortIf().statementNoShortIf()!=null){
                 if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement()!=null){
                     if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                        System.out.println("i have a simple return");
+                        //System.out.println("i have a simple return");
                         smells.add(new smell(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
                                 "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                     }
@@ -513,7 +513,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                                     if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
                                         if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
                                             if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                                                System.out.println("i have a return");
+                                                //System.out.println("i have a return");
                                                 smells.add(new smell(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                                         "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                                             }
@@ -530,7 +530,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             if(ctx.enhancedForStatementNoShortIf().statementNoShortIf()!=null){
                 if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement()!=null){
                     if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                        System.out.println("i have a simple return");
+                        //System.out.println("i have a simple return");
                         smells.add(new smell(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
                                 "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                     }
@@ -542,7 +542,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                                     if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null){
                                         if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null) {
                                             if (ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                                                System.out.println("i have a return");
+                                                //System.out.println("i have a return");
                                                 smells.add(new smell(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
                                                         "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
                                             }
