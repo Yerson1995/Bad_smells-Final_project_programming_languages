@@ -59,6 +59,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         if(ctx.fieldDeclaration() != null){
             field += ctx.fieldDeclaration().variableDeclaratorList().variableDeclarator().size();
         }else if (ctx.methodDeclaration() != null) {
+            if(ctx.methodDeclaration().methodBody().block().blockStatements()!= null){
             methodsw+=ctx.methodDeclaration().methodBody().block().blockStatements().blockStatement().size();
             String methodName = ctx.methodDeclaration().methodHeader().methodDeclarator().Identifier().getText();
             boolean isGet = methodName.startsWith("get");
@@ -69,6 +70,8 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
             else{
                 methods++;
                 //System.out.println("estoy sumando");
+            }
+            //
             }
         } else if (ctx.classDeclaration() != null) {
             innerClasses++;
@@ -85,6 +88,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     @Override
     public T visitMethodBody(Java8Parser.MethodBodyContext ctx) {
         controlFlow = 0;
+        if(ctx.block().blockStatements()!=null){
         List<Java8Parser.BlockStatementContext> statements = ctx.block().blockStatements().blockStatement();
         count++;//contando cantidad de metodos declarados
         //System.out.println("Count "+count+"de tamaño"+statements.size());
@@ -117,6 +121,7 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                 //System.out.println("variable");
             }
         }
+        
         String methodName = ((Java8Parser.MethodDeclarationContext)ctx.getParent()).methodHeader().methodDeclarator().Identifier().getText();
         if(statements.size()> 10 ){
             smells.add(new smell(((Java8Parser.MethodDeclarationContext)ctx.parent).start,
@@ -133,6 +138,8 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
                             + "Method name: " + methodName , "https://refactoring.guru/smells/long-method"));
 
 
+        }
+        //
         }
         return null;
     }
