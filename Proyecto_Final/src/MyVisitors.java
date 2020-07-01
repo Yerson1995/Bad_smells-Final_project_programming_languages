@@ -78,12 +78,10 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         return(T)visitChildren(ctx);
     }
 //---------------------------------------------------------------------
-
     @Override
     public T visitStatement(Java8Parser.StatementContext ctx) {
         return (T) visitChildren(ctx);
     }
-
     @Override
     public T visitMethodBody(Java8Parser.MethodBodyContext ctx) {
         controlFlow = 0;
@@ -360,7 +358,6 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
         return null;
     }
     //-----------------------------------------------------------------------------------
-
     @Override
     public Object visitVariableDeclaratorId(Java8Parser.VariableDeclaratorIdContext ctx) {
         System.out.println("Variable declarada "+ctx.Identifier().getText());
@@ -379,52 +376,65 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     @Override
     public T visitWhileStatement(Java8Parser.WhileStatementContext ctx) {
         System.out.println("im in while");
-        if(ctx.statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-            System.out.println("i have a simple return");
-            smells.add(new smell(ctx.statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                    "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
-            return null;
-        }
-        if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements()!=null) {
-            if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement() != null) {
-                int t = ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-                for (int c = 0; c < t; c++) {
-                    if(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null)
-                    if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!= null) {
-                        if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                            System.out.println("i have a return");
-                            smells.add(new smell(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                                    "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
+        if(ctx.statement()!=null) {
+            if (ctx.statement().statementWithoutTrailingSubstatement() != null) {
+                if (ctx.statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                    System.out.println("i have a simple return");
+                    smells.add(new smell(ctx.statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                            "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                    return null;
+                }
+                else if (ctx.statement().statementWithoutTrailingSubstatement().block() != null) {
+                    if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements() != null) {
+                        if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement() != null) {
+                            int t = ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                            for (int c = 0; c < t; c++) {
+                                if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
+                                    if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
+                                        if (ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                                            System.out.println("i have a return");
+                                            smells.add(new smell(ctx.statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                                    "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-
             }
         }
         return null;
     }
-
     @Override
     public Object visitWhileStatementNoShortIf(Java8Parser.WhileStatementNoShortIfContext ctx) {
         System.out.println("im in while");
-        if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
-            System.out.println("i have a simple return");
-            smells.add(new smell(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
-                    "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
-        }
-        if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements()!=null)
-        if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
-            int t=ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-            for(int c=0;c<t;c++){
-                if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null)
-                if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
-                    if(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                        System.out.println("i have a return");
-                        smells.add(new smell(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                                "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
+        if(ctx.statementNoShortIf()!=null) {
+            if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement() != null) {
+                if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                    System.out.println("i have a simple return");
+                    smells.add(new smell(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
+                            "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                }
+                else if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block() != null) {
+                    if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements() != null) {
+                        if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement() != null) {
+                            int t = ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                            for (int c = 0; c < t; c++) {
+                                if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
+                                    if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
+                                        if (ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                                            System.out.println("i have a return");
+                                            smells.add(new smell(ctx.statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                                    "This while has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                }
             }
-
         }
         return (T) visitChildren(ctx);
     }
@@ -433,81 +443,115 @@ public class MyVisitors<T> extends Java8ParserBaseVisitor {
     public Object visitForStatement(Java8Parser.ForStatementContext ctx) {
         //System.out.println(ctx.start.getLine());
         if(ctx.basicForStatement()!=null){
-            if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                System.out.println("i have a simple return");
-                smells.add(new smell(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                        "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
-            }
-            else if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements()!=null){
-                int t=ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-                for(int c=0;c<t;c++){
-                    if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null)
-                    if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null) {
-                        if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
-                            System.out.println("i have a return");
-                            smells.add(new smell(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                                    "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+            if(ctx.basicForStatement().statement()!=null) {
+                if(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement()!=null) {
+                    if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                        System.out.println("i have a simple return");
+                        smells.add(new smell(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                    }else if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block()!= null) {
+                        if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements() != null) {
+                            int t = ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                            for (int c = 0; c < t; c++) {
+                                if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
+                                    if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
+                                        if (ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                                            System.out.println("i have a return");
+                                            smells.add(new smell(ctx.basicForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                                    "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
         else if(ctx.enhancedForStatement()!=null){
-            if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                System.out.println("i have a simple return");
-                smells.add(new smell(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                        "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
-            }
-            else if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
-                int t=ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-                for(int c=0;c<t;c++){
-                    if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
-                        if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                            System.out.println("I have a return");
-                            smells.add(new smell(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                                    "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+            if(ctx.enhancedForStatement().statement()!=null){
+                if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement()!=null){
+                    if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                        System.out.println("i have a simple return");
+                        smells.add(new smell(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                    }
+                    else if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+                        int t=ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                        for(int c=0;c<t;c++){
+                            if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null){
+                                if(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null) {
+                                    if (ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                                        System.out.println("I have a return");
+                                        smells.add(new smell(ctx.enhancedForStatement().statement().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                                "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                                    }
+                                }
+                            }
                         }
+                    }
                 }
             }
         }
         return (T) visitChildren(ctx);
     }
-
     @Override
     public Object visitForStatementNoShortIf(Java8Parser.ForStatementNoShortIfContext ctx) {
         if(ctx.basicForStatementNoShortIf()!=null){
-            if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                System.out.println("i have a simple return");
-                smells.add(new smell(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
-                        "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
-            }
-            else if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
-                int t=ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-                for(int c=0;c<t;c++){
-                    if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
-                        if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                            System.out.println("i have a return");
-                            smells.add(new smell(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                                    "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+            if(ctx.basicForStatementNoShortIf().statementNoShortIf()!=null){
+                if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement()!=null){
+                    if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                        System.out.println("i have a simple return");
+                        smells.add(new smell(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
+                                "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                    }
+                    else if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block()!=null){
+                        if(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements()!=null) {
+                            if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement() != null) {
+                                int t = ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                                for (int c = 0; c < t; c++) {
+                                    if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement() != null) {
+                                        if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement() != null) {
+                                            if (ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                                                System.out.println("i have a return");
+                                                smells.add(new smell(ctx.basicForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                                        "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
+                    }
                 }
             }
         }
         else if(ctx.enhancedForStatementNoShortIf()!=null){
-            if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                System.out.println("i have a simple return");
-                smells.add(new smell(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
-                        "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
-            }
-            else if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
-                int t=ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
-                for(int c=0;c<t;c++){
-                    if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null)
-                        if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement()!=null){
-                            System.out.println("i have a return");
-                            smells.add(new smell(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
-                                    "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+            if(ctx.enhancedForStatementNoShortIf().statementNoShortIf()!=null){
+                if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement()!=null){
+                    if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement()!=null){
+                        System.out.println("i have a simple return");
+                        smells.add(new smell(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().returnStatement().start,
+                                "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                    }
+                    else if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block()!=null){
+                        if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements()!=null){
+                            if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement()!=null){
+                                int t=ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement().size();
+                                for(int c=0;c<t;c++){
+                                    if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement()!=null){
+                                        if(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement()!=null) {
+                                            if (ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement() != null) {
+                                                System.out.println("i have a return");
+                                                smells.add(new smell(ctx.enhancedForStatementNoShortIf().statementNoShortIf().statementWithoutTrailingSubstatement().block().blockStatements().blockStatement(c).statement().statementWithoutTrailingSubstatement().returnStatement().start,
+                                                        "This for has a return.\n", "https://refactoring.guru/refactoring/smells"));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
+                    }
                 }
             }
         }

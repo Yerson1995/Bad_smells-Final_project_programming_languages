@@ -24,4 +24,3 @@ public class smell {
                 + "\nDescription: " + description;
     }
 }
-
